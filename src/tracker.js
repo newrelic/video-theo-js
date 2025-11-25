@@ -4,7 +4,6 @@ import pkg from '../package.json';
 export default class TheoTracker extends nrvideo.VideoTracker {
   constructor(player, options) {
     super(player, options);
-    console.log('TheoTracker constructor', player, options);
     nrvideo.Core.addTracker(this, options);
     this.options = options;
     this.previousQuality = null; // Track previous quality for comparison
@@ -35,7 +34,7 @@ export default class TheoTracker extends nrvideo.VideoTracker {
     return this.getPlayerVersion();
   }
 
-  getPlayerVersion() {
+  getTrackerVersion() {
     return pkg.version;
   }
 
@@ -66,6 +65,10 @@ export default class TheoTracker extends nrvideo.VideoTracker {
 
   isMuted() {
     return this.player.muted;
+  }
+
+  getPlayerVersion() {
+    return this.player?.version || THEOPlayer.version;
   }
 
   getRenditionHeight() {
@@ -115,7 +118,7 @@ export default class TheoTracker extends nrvideo.VideoTracker {
     this.onWaiting = this.onWaiting.bind(this);
     this.onQualityChange = this.onQualityChange.bind(this);
     this.onTrackChange = this.onTrackChange.bind(this);
-    this.onSourceChange = this.onSourceChange.bind(this);
+
     
     // Create bound handlers for track-level quality change events
     this.onTrackActiveQualityChange = this.onTrackActiveQualityChange.bind(this);
@@ -136,9 +139,7 @@ export default class TheoTracker extends nrvideo.VideoTracker {
     // ---- Listen for track and source changes ----
     // Note: Quality changes are handled at the track level, not player level
     this.player.addEventListener("trackchange", this.onTrackChange);
-    this.player.addEventListener("sourcechange", this.onSourceChange);
-
-
+  
     // Helper function to setup videoTracks listeners
     const setupVideoTracksListeners = () => {
       if (this.player.videoTracks) {
@@ -148,7 +149,6 @@ export default class TheoTracker extends nrvideo.VideoTracker {
         // Initialize track listeners if a track is already available
         const initialTrack = this.player.videoTracks.length > 0 ? this.player.videoTracks[0] : null;
         if (initialTrack) {
-          console.log('[TheoTracker] Initial track found, setting up quality change listeners');
           this.onTrackChange({ track: initialTrack, target: initialTrack });
         }
       }
@@ -179,7 +179,6 @@ export default class TheoTracker extends nrvideo.VideoTracker {
 
     // Unregister all event listeners using the bound methods
     this.player.removeEventListener('canplay', this.onDownload);
-    this.player.removeEventListener('progress', this.onDownload);
     this.player.removeEventListener('play', this.onPlay);
     this.player.removeEventListener('playing', this.onPlaying);
     this.player.removeEventListener('pause', this.onPause);
@@ -190,9 +189,7 @@ export default class TheoTracker extends nrvideo.VideoTracker {
     this.player.removeEventListener('waiting', this.onWaiting);
     
     // Unregister track and source change listeners
-    this.player.removeEventListener('trackchange', this.onTrackChange);
-    this.player.removeEventListener('sourcechange', this.onSourceChange);
-    
+    this.player.removeEventListener('trackchange', this.onTrackChange);    
     // Unregister videoTracks listeners if available
     if (this.player.videoTracks) {
       this.player.videoTracks.removeEventListener('change', this.onTrackChange);
@@ -223,15 +220,6 @@ export default class TheoTracker extends nrvideo.VideoTracker {
     const track = e.track || (this.player.videoTracks?.length > 0 ? this.player.videoTracks[0] : null);
     const activeQuality = track?.activeQuality || quality;
     
-    console.log('[TheoTracker] onQualityChange:', {
-      event: e,
-      quality: activeQuality,
-      track: track,
-      height: activeQuality?.height,
-      width: activeQuality?.width,
-      bandwidth: activeQuality?.bandwidth
-    });
-    
     // Send quality change event to New Relic
     if (activeQuality) {
       // Store current quality for comparison
@@ -249,16 +237,8 @@ export default class TheoTracker extends nrvideo.VideoTracker {
     // Extract current player track
     const currentTrack = e.track || e.target || (this.player.videoTracks?.length > 0 ? this.player.videoTracks[0] : null);
     
-    console.log('[TheoTracker] onTrackChange:', {
-      event: e,
-      currentTrack: currentTrack,
-      previousTrack: this.currentTrack,
-      activeQuality: currentTrack?.activeQuality
-    });
-    
     // Remove existing event listeners from previous track if it exists
     if (this.currentTrack && this.currentTrack !== currentTrack) {
-      console.log('[TheoTracker] Removing quality change listeners from previous track');
       
       // Remove activequalitychanged listener
       if (this.trackQualityListeners.activequalitychanged) {
@@ -279,8 +259,7 @@ export default class TheoTracker extends nrvideo.VideoTracker {
     
     // Add new event listeners to current track for quality changes
     if (currentTrack) {
-      console.log('[TheoTracker] Adding quality change listeners to current track');
-      
+
       // Listen for active quality changes on the track
       this.trackQualityListeners.activequalitychanged = this.onTrackActiveQualityChange;
       currentTrack.addEventListener('activequalitychanged', this.trackQualityListeners.activequalitychanged);
@@ -298,15 +277,10 @@ export default class TheoTracker extends nrvideo.VideoTracker {
           const newHeight = activeQuality.height;
           
           if (prevHeight !== newHeight) {
-            console.log('[TheoTracker] Quality changed via track change:', {
-              previous: prevHeight,
-              current: newHeight
-            });
             this.onQualityChange({ quality: activeQuality, track: currentTrack });
           }
         } else {
           // First quality detected - initialize
-          console.log('[TheoTracker] Initial quality detected via track change:', activeQuality.height);
         }
         
         // Store current quality for comparison
@@ -321,7 +295,6 @@ export default class TheoTracker extends nrvideo.VideoTracker {
   
   // Handler for track-level activequalitychanged event
   onTrackActiveQualityChange(e) {
-    console.log('[TheoTracker] Track active quality changed:', e);
     const quality = e.quality || e.target?.activeQuality || this.currentTrack?.activeQuality;
     if (quality) {
       this.onQualityChange({ quality: quality, track: this.currentTrack });
@@ -330,50 +303,35 @@ export default class TheoTracker extends nrvideo.VideoTracker {
   
   // Handler for track-level updatequality event
   onTrackUpdateQuality(e) {
-    console.log('[TheoTracker] Track quality updated:', e);
     const quality = e.quality || e.target?.activeQuality || this.currentTrack?.activeQuality;
     if (quality) {
       this.onQualityChange({ quality: quality, track: this.currentTrack });
     }
   }
-  
-
-  onSourceChange(e) {
-    const src = this.player.source?.sources?.[0]?.src;
-    const src1 = this.player.source;
-    console.log('[TheoTracker] onSourceChange:', src, src1);
-    // this.sendSourceChange(e);
-  }
 
   onDownload(e) {
-    console.log('[TheoTracker] onDownload:', e.type);
-    // this.sendDownload({ state: e.type });
+    this.sendDownload({ state: e.type });
   }
 
   onPlay() {
-    console.log('[TheoTracker] onPlay');
     this.sendRequest();
   }
 
   onPlaying() {
-    console.log('[TheoTracker] onPlaying');
     this.sendBufferEnd();
     this.sendResume();
     this.sendStart();
   }
 
   onPause() {
-    console.log('[TheoTracker] onPause');
     this.sendPause();
   }
 
   onSeeking() {
-    console.log('[TheoTracker] onSeeking');
     this.sendSeekStart();
   }
 
   onSeeked() {
-    console.log('[TheoTracker] onSeeked');
     this.sendSeekEnd();
   }
 
@@ -381,26 +339,17 @@ export default class TheoTracker extends nrvideo.VideoTracker {
     // THEOplayer error event
     const error = this.player.error || e.error || e;
     const errorCode = error.code || error.type;
-    const errorMessage = error.message || `Player error ${errorCode || ''}`;
-    
-    console.log('[TheoTracker] onError:', { errorCode, errorMessage, error: e });
-    
-    if (errorCode || errorMessage) {
-      this.sendError({ errorCode, errorMessage, error });
-    } else {
-      this.sendError({ error: e });
-    }
+    const errorMessage = error.message || `Player error ${errorCode || ''}`;    
+    this.sendError({ errorCode, errorMessage});
   }
 
   onEnded() {
-    console.log('[TheoTracker] onEnded');
     this.sendEnd();
   }
 
   onWaiting() {
     // THEOplayer waiting event - indicates buffering
     const video = this.player.element?.querySelector('video');
-    console.log('[TheoTracker] onWaiting', { readyState: video?.readyState });
     if (video && video.readyState < 4) { // HAVE_ENOUGH_DATA = 4
       this.sendBufferStart();
     }
