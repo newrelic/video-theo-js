@@ -21,9 +21,10 @@
     "url": "https://github.com/newrelic/video-theo-js"
   },
   "author": "Peter Addo",
-  "license": "Apache-2.0",
+  "license": "New Relic",
   "dependencies": {
-    "@newrelic/video-core": "^4.0.0"
+    "@newrelic/video-core": "^4.0.0",
+    "theoplayer": "^10.5.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.25.6",

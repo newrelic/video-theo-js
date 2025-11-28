@@ -34,20 +34,16 @@ function waitForTHEOplayer(callback) {
 
 // Initialize player
 function initPlayer() {
-    console.log('initPlayer 0');
     const params = getUrlParams();
-    console.log('initPlayer 1');
     // Check if we're using a regular video URL or THEO Live
     const isRegularVideo = !!params.video;
     const isTHEOLive = !!(params.channel || params.distribution);
-    console.log('initPlayer 2');
     // Default to sample educational video if none specified
     if (!isRegularVideo && !isTHEOLive) {
         // Use a sample educational video stream (HLS)
         window.location.search = '?video=https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
         return;
     }
-    console.log('initPlayer 3');
     const playerElement = document.getElementById('player-container');
     if (!playerElement) {
         console.error('Player container not found');
@@ -56,7 +52,6 @@ function initPlayer() {
 
     // Initialize THEO Player using the global THEOplayer object from CDN
     // This works without npm - THEOplayer is available globally after the script loads
-    console.log('initPlayer 4');
     const playerConfig = {
         license: LICENSE,
         libraryLocation: 'https://cdn.theoplayer.com/dash/theoplayer/',
@@ -65,12 +60,10 @@ function initPlayer() {
             fluid: true
         }
     };
-    console.log('initPlayer 4');
     // Only add THEO Live config if using THEO Live (not regular video)
     if (isTHEOLive) {
         // Determine discovery URLs based on whether it's a distribution or channel
-        console.log('initPlayer 5');
-        const isDistribution = !!params.distribution;
+        const isDistribution = !!parms.distribution;
         const discoveryUrls = isDistribution
             ? [
                 'https://discovery.theo.live/v2/distributions/',
@@ -87,12 +80,9 @@ function initPlayer() {
         };
     }
 
-    console.log('initPlayer 5 - About to create THEOplayer.Player');
     try {
         player = new THEOplayer.Player(playerElement, playerConfig);
-        console.log('initPlayer 6 - THEOplayer.Player created successfully');
     } catch (error) {
-        console.error('initPlayer - Error creating THEOplayer.Player:', error);
         console.error('Error details:', {
             message: error.message,
             stack: error.stack,
@@ -113,32 +103,26 @@ function initPlayer() {
 
     // Set the source based on type
     if (isRegularVideo) {
-        console.log('initPlayer 6');
         // Regular video URL (HLS, DASH, MP4, etc.)
         const videoUrl = decodeURIComponent(params.video);
         const videoType = detectVideoType(videoUrl);
-        console.log('initPlayer 7');
         player.source = {
             sources: [{
                 src: videoUrl,
                 type: videoType
             }]
         };
-        console.log('initPlayer 8');
         // Extract video name from URL or use default
         const videoName = extractVideoName(videoUrl);
         document.getElementById('channel-name').textContent = videoName;
-        console.log('initPlayer 9');
         document.title = videoName + ' - THEO Player Demo';
 
     } else if (isTHEOLive) {
-        console.log('initPlayer 10');
         // THEO Live channel or distribution
         const src = params.distribution || params.channel;
         
         if (src) {
-            console.log('Loading THEO Live channel/distribution:', src);
-            
+        
             // Set the source with THEO Live type (matching demo.html format)
             try {
                 player.source = {
@@ -147,9 +131,7 @@ function initPlayer() {
                         type: 'theolive'
                     }
                 };
-                console.log('Source set successfully for THEO Live:', src);
             } catch (error) {
-                console.error('Error setting THEO Live source:', error);
                 const channelNameEl = document.getElementById('channel-name');
                 if (channelNameEl) {
                     channelNameEl.textContent = 'Error: Failed to set source';
@@ -160,10 +142,7 @@ function initPlayer() {
 
         // Listen for publication loaded event to get channel name
         if (player.theoLive) {
-            console.log('initPlayer 11');
             player.theoLive.addEventListener('publicationloaded', function(event) {
-                console.log('initPlayer 12');
-                console.log('Publication loaded:', event);
                 const channelName = event.channelName || 'THEO Live Stream';
                 document.getElementById('channel-name').textContent = channelName;
                 document.title = channelName + ' - THEO Live Demo';
@@ -171,8 +150,6 @@ function initPlayer() {
 
             // Listen for publication errors
             player.theoLive.addEventListener('publicationerror', function(event) {
-                console.log('initPlayer 13');
-                console.error('THEO Live publication error:', event);
                 const channelNameEl = document.getElementById('channel-name');
                 if (channelNameEl) {
                     channelNameEl.textContent = 'Error: Failed to load publication. Channel may not be available.';
@@ -182,7 +159,6 @@ function initPlayer() {
 
             // Listen for discovery errors
             player.theoLive.addEventListener('error', function(event) {
-                console.log('initPlayer 14');
                 console.error('THEO Live discovery error:', event);
                 const channelNameEl = document.getElementById('channel-name');
                 if (channelNameEl) {
@@ -191,16 +167,12 @@ function initPlayer() {
                 }
             });
         } else {
-            console.log('initPlayer 15');
             console.warn('THEO Live API not available. Make sure theoLive config is set correctly.');
         }
     }
 
     // Start updating stats
-    console.log('initPlayer 16');
     updateStats();
-    console.log('initPlayer 17');
-    console.log('initPlayer 7 - 1');
     const options = {
         info: {
           beacon: '',
@@ -210,10 +182,8 @@ function initPlayer() {
       };
     try {
         tracker = new TheoTracker(player, options);
-        console.log('waitForTHEOplayer 2 - tracker initialized');
     } catch (error) {
         console.error('waitForTHEOplayer - Error initializing tracker:', error);
-        console.error('Error stack:', error.stack);
     }
 }
 
@@ -388,13 +358,10 @@ window.addEventListener('beforeunload', function() {
 waitForTHEOplayer(function() {
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
-        console.log('waitForTHEOplayer 0.1');
         document.addEventListener('DOMContentLoaded', initPlayer);
     } else {
-        console.log('waitForTHEOplayer 0');
         try {
             initPlayer();
-            console.log('waitForTHEOplayer 1 - initPlayer completed successfully');
         } catch (error) {
             console.error('waitForTHEOplayer - Error in initPlayer:', error);
             console.error('Error stack:', error.stack);

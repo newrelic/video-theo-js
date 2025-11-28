@@ -68,7 +68,7 @@ export default class TheoTracker extends nrvideo.VideoTracker {
   }
 
   getPlayerVersion() {
-    return this.player?.version || THEOPlayer.version;
+    return THEOPlayer.version;
   }
 
   getRenditionHeight() {
