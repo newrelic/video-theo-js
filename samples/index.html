@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THEO Live Demo</title>
+    
+    <!-- THEO Player CSS from CDN -->
+    <link rel="stylesheet" href="https://cdn.theoplayer.com/dash/theoplayer/ui.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        main {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 1rem;
+            z-index: 1;
+        }
+
+        h1 {
+            font-weight: 400;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        #player-container {
+            flex: 1;
+            width: 100%;
+            min-height: 0;
+        }
+
+        .player-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 3rem;
+            left: 0;
+            right: 0;
+            z-index: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0 1rem;
+            overflow-x: hidden;
+        }
+
+        .stats-panel {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            min-width: 200px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            font-size: 0.9rem;
+        }
+
+        .info-row span:first-child {
+            margin-right: 1rem;
+        }
+
+        @media screen and (max-width: 599px) {
+            main {
+                height: auto;
+            }
+
+            footer {
+                position: relative;
+                bottom: auto;
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .player-container {
+                height: 50vh;
+            }
+        }
+
+        /* Makes the player setting menu appear on top of the footer */
+        .theo-menu-animation-container {
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <h1 id="channel-name">Loading...</h1>
+            <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">
+                Use <code>?video=URL</code> for regular videos or <code>?channel=ID</code> for THEO Live
+            </p>
+        </header>
+        <div id="player-container" class="player-container video-js theoplayer-skin"></div>
+        <footer>
+            <div class="stats-panel">
+                <div class="info-row">
+                    <span>Version:</span>
+                    <span id="version">-</span>
+                </div>
+                <div class="info-row">
+                    <span>Playback rate:</span>
+                    <span id="playback-rate">-</span>
+                </div>
+                <div class="info-row">
+                    <span>Engine latency:</span>
+                    <span id="engine-latency">-</span>
+                </div>
+                <div class="info-row">
+                    <span>Distribution latency:</span>
+                    <span id="distribution-latency">-</span>
+                </div>
+                <div class="info-row">
+                    <span>Player latency:</span>
+                    <span id="player-latency">-</span>
+                </div>
+                <div class="info-row">
+                    <span>Target latency:</span>
+                    <span id="target-latency">-</span>
+                </div>
+                <div class="info-row">
+                    <span>Quality:</span>
+                    <span id="quality">-</span>
+                </div>
+                <div class="info-row">
+                    <span>Dimensions:</span>
+                    <span id="dimensions">-</span>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- THEO Player JavaScript from CDN - No npm required! -->
+    <script src="https://cdn.theoplayer.com/dash/theoplayer/THEOplayer.js"></script>
+    <script src="../dist/umd/newrelic-video-theo.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
+
