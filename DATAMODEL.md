@@ -43,9 +43,12 @@ An Attribute is a piece of data associated with an event. Attributes provide add
 | contentId                | The ID of the video.                                                                                                                               |
 | contentTitle             | The title of the video.                                                                                                                            |
 | contentIsLive            | True if the video is live.                                                                                                                         |
-| contentBitrate           | Bitrate (in bits) of the video.                                                                                                                    |
-| contentRenditionName     | Name of the rendition (e.g., 1080p).                                                                                                               |
-| contentRenditionBitrate  | Target Bitrate of the rendition.                                                                                                                   |
+| contentBitrate                  | Bitrate (in bits) of the video.                                                                                                                    |
+| contentManifestBitrate          | Bitrate (in bits per second) from the manifest/playlist file. *(verify)*                                                                           |
+| contentSegmentDownloadBitrate   | Measured bitrate (in bits per second) based on segment download performance. *(verify)*                                                            |
+| contentNetworkDownloadBitrate   | Network download bitrate (in bits per second) measured during content delivery. *(verify)*                                                         |
+| contentRenditionName            | Name of the rendition (e.g., 1080p).                                                                                                               |
+| contentRenditionBitrate         | Target Bitrate of the rendition.                                                                                                                   |
 | contentRenditionHeight   | Rendition actual Height (before re-scaling).                                                                                                       |
 | contentRenditionWidth    | Rendition actual Width (before re-scaling).                                                                                                        |
 | contentDuration          | Duration of the video, in ms.                                                                                                                      |
@@ -63,7 +66,18 @@ An Attribute is a piece of data associated with an event. Attributes provide add
 | totalAdPlaytime          | Total time ad is played for this video session.                                                                                                    |
 | elapsedTime              | Active time video watched between two consecutive heartbeats                                                                                       |
 | bufferType               | When buffer starts, i.e., initial, seek, pause & connection.                                                                                       |
-| timeSinceLastError       | Time in milliseconds since the last content error occurred. Only included after an error has occurred.                                             |
+| timeSinceRequested       | Time (in milliseconds) since the video was requested.                                                                                              |
+| timeSinceStarted         | Time (in milliseconds) since the video started playing.                                                                                            |
+| timeSinceTrackerReady    | Time (in milliseconds) since the tracker was initialized (PLAYER_READY).                                                                           |
+| timeSinceLastHeartbeat   | Time (in milliseconds) since the last heartbeat event.                                                                                             |
+| timeSinceBufferBegin     | Time (in milliseconds) since the last buffer event began.                                                                                          |
+| timeSincePaused          | Time (in milliseconds) since the video was last paused.                                                                                            |
+| timeSinceLastError       | Time (in milliseconds) since the last content error occurred. Only included after an error has occurred.                                            |
+| numberOfVideos           | Number of videos played in this session.                                                                                                           |
+| numberOfErrors           | Number of errors occurred in this session.                                                                                                         |
+| trackerName              | Name of the tracker/agent.                                                                                                                         |
+| trackerVersion           | Version of the tracker/agent.                                                                                                                      |
+| playtimeSinceLastEvent   | Active content playtime (in milliseconds) since the last event. (JS players only)                                                                  |
 | asn                      | Autonomous System Number: a unique number identifying a group of IP networks that serves the content to the end user.                              |
 | asnLatitude              | The latitude of the geographic center of the postal code where the Autonomous System Network is registered. This is not the end user's latitude.   |
 | asnLongitude             | The longitude of the geographic center of the postal code where the Autonomous System Network is registered. This is not the end user's longitude. |
@@ -176,7 +190,6 @@ An Attribute is a piece of data associated with an event. Attributes provide add
 | contentTitle             | The title of the video.                                                                                                                            |
 | errorMessage             | Message of the error.                                                                                                                              |
 | errorCode                | Error code if it's known.                                                                                                                          |
-| backTrace                | Stack trace of the error.                                                                                                                          |
 | isBackgroundEvent        | If the player is hidden by another window.                                                                                                         |
 | contentSrc               | Content source URL.                                                                                                                                |
 | contentCdn               | Content CDN URL.                                                                                                                                   |
