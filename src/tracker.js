@@ -1,4 +1,4 @@
-import nrvideo from '@newrelic/video-core';
+import nrvideo, { getRegisteredHarvester } from '@newrelic/video-core';
 import pkg from '../package.json';
 
 export default class TheoTracker extends nrvideo.VideoTracker {
@@ -19,7 +19,7 @@ export default class TheoTracker extends nrvideo.VideoTracker {
   }
 
   getPlayerName() {
-    return 'Theo';
+    return 'THEOplayer';
   }
 
   getInstrumentationProvider() {
@@ -68,7 +68,15 @@ export default class TheoTracker extends nrvideo.VideoTracker {
   }
 
   getPlayerVersion() {
-    return THEOPlayer.version;
+    try {
+      if (this.player?.version) return this.player.version;
+      if (typeof THEOPlayer !== 'undefined' && THEOPlayer.version) return THEOPlayer.version;
+    } catch (err) {}
+    return null;
+  }
+
+  getHarvester() {
+    return getRegisteredHarvester('Browser');
   }
 
   getRenditionHeight() {
@@ -89,6 +97,38 @@ export default class TheoTracker extends nrvideo.VideoTracker {
     // Fallback to video element width
     const video = this.player.element?.querySelector('video');
     return video ? video.videoWidth : null;
+  }
+
+  getBitrate() {
+    const bw = this.currentTrack?.activeQuality?.bandwidth;
+    return bw > 0 ? bw : null;
+  }
+
+  getManifestBitrate() {
+    try {
+      const track = this.player.videoTracks?.[0];
+      if (track?.qualities?.length > 0) {
+        const max = Math.max(...Array.from(track.qualities).map((q) => q.bandwidth || 0));
+        return max > 0 ? max : null;
+      }
+    } catch (err) {}
+    return null;
+  }
+
+  getSegmentDownloadBitrate() {
+    try {
+      const bw = this.player.metrics?.currentBandwidthEstimate;
+      return bw > 0 ? Math.round(bw) : null;
+    } catch (err) {}
+    return null;
+  }
+
+  getNetworkDownloadBitrate() {
+    try {
+      const bw = this.player.metrics?.currentBandwidthEstimate;
+      return bw > 0 ? Math.round(bw) : null;
+    } catch (err) {}
+    return null;
   }
 
   getPlayrate() {
