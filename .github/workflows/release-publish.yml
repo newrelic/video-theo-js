@@ -1,13 +1,13 @@
 name: Release Publish
 
-# Stage 2: Triggered on every push to master.
+# Stage 2: Triggered on every push to main.
 # If package.json version differs from the latest git tag, creates the tag,
 # triggers use-shared-publish.yml (npm + S3), and creates a GitHub Release.
 
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
     inputs:
       version:
@@ -125,7 +125,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh workflow run use-shared-publish.yml --ref master
+          gh workflow run use-shared-publish.yml --ref main
           echo "Triggered use-shared-publish.yml"
 
       - name: Trigger Release Notes Docs PR
@@ -133,7 +133,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${{ needs.check-release.outputs.version }}"
-          gh workflow run release-notes-docs-pr.yml --ref master --field tag="v$VERSION" --field dry_run=false
+          gh workflow run release-notes-docs-pr.yml --ref main --field tag="v$VERSION" --field dry_run=false
           echo "Triggered release-notes-docs-pr.yml for v$VERSION"
 
       - name: Summary

@@ -7,7 +7,7 @@ name: Release
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
     inputs:
       dry-run:
@@ -41,7 +41,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
         with:
-          ref: master
+          ref: main
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -146,7 +146,7 @@ jobs:
               PR_CREATE_OUTPUT=$(gh pr create \
                 --title "chore(release): v$VERSION" \
                 --body "Automated release PR - Version $VERSION: package.json, package-lock.json, and CHANGELOG.md updated. Review and merge to trigger automated publishing." \
-                --base master \
+                --base main \
                 --head "$BRANCH" 2>&1)
               set -e
 

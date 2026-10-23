@@ -1,5 +1,7 @@
 // THEO Player License Key
-const LICENSE = 'sZP7IYe6T6PzdQ4qWQgoImkeIDkqf6i6Ct4LUQj-IYPydDa6T6PzdQ4qWQgoImkeIDkqf6i6Io4pIYP1UQgqWgjeCYxgflEc3L0k0uf_0L5_3LfZFOPgswANbKXzdDjpYox1UQh6TlBt3lbc0LeZ0u5i0u5VfKxqWDXNWG3ybQXGImf9DZPeIDkqFGxEID2pWQgoImPUFOPeWok1dDrLYt3qUYPlImf9DZfJfgzVfG3edt06TgV6dwx-Wuh6Ymi6bo4pIXjNWYAZIY3LdDjpflNzbG4gFOPKIDXzUYPgbZf9DZPEIY3ifgkj';
+const LICENSE = 'Your License Key';
+
+
 
 // Sample video URLs for testing
 // Educational/Sports test streams:
@@ -11,6 +13,7 @@ const LICENSE = 'sZP7IYe6T6PzdQ4qWQgoImkeIDkqf6i6Ct4LUQj-IYPydDa6T6PzdQ4qWQgoImk
 let player = null;
 let tracker = null;
 // Get URL parameters
+
 function getUrlParams() {
     const params = new URLSearchParams(window.location.search);
     return {
@@ -173,7 +176,7 @@ function initPlayer() {
 
     // Start updating stats
     updateStats();
-    const options = {
+    const NR_VIDEO_OPTIONS = {
         info: {
           beacon: '',
           licenseKey: '',
@@ -181,7 +184,7 @@ function initPlayer() {
         },
       };
     try {
-        tracker = new TheoTracker(player, options);
+        tracker = new TheoTracker(player, NR_VIDEO_OPTIONS);
     } catch (error) {
         console.error('waitForTHEOplayer - Error initializing tracker:', error);
     }
