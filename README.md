@@ -18,6 +18,7 @@ The New Relic THEOplayer Tracker provides comprehensive video analytics for appl
 - ⚡ **Real-Time Performance** - Bandwidth estimation and rendition quality monitoring
 - 🎬 **Adaptive Streaming** - Optimized for adaptive bitrate streaming with per-track quality analysis
 
+
 ## Table of Contents
 
 - [Installation](#installation)
@@ -54,6 +55,7 @@ yarn add @newrelic/video-theo
 ### Option 2: Direct Script Include (Without NPM)
 
 For quick integration without a build system, include the tracker directly in your HTML:
+
 
 ```html
 <!DOCTYPE html>
