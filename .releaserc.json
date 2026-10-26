@@ -6,12 +6,15 @@
     [
       "@semantic-release/commit-analyzer",
       {
-        "preset": "conventionalcommits",
+        "preset": "angular",
         "releaseRules": [
           {"breaking": true, "release": "major"},
+          {"type": "feat!", "release": "major"},
+          {"type": "fix!", "release": "major"},
           {"type": "feat", "release": "minor"},
           {"type": "fix", "release": "patch"},
           {"type": "perf", "release": "patch"},
+          {"type": "sec", "release": "patch"},
           {"type": "revert", "release": "patch"},
           {"type": "docs", "release": false},
           {"type": "chore", "release": false},
@@ -29,6 +32,7 @@
             {"type": "feat", "section": "New features"},
             {"type": "fix", "section": "Bug fixes"},
             {"type": "perf", "section": "Improvements"},
+            {"type": "sec", "section": "Security"},
             {"type": "revert", "section": "Reverts", "hidden": true},
             {"type": "docs", "section": "Documentation", "hidden": true},
             {"type": "style", "section": "Styles", "hidden": true},
@@ -38,13 +42,33 @@
             {"type": "build", "section": "Build System", "hidden": true},
             {"type": "ci", "section": "Continuous Integration", "hidden": true}
           ]
+        },
+        "writerOpts": {
+          "mainTemplate": "{{> header}}\n{{#each commitGroups}}{{#if title}}{{#each commits}}- **{{../title}}: {{subject}}**\n{{/each}}{{/if}}{{/each}}\n"
         }
       }
     ],
     [
       "@semantic-release/changelog",
       {
-        "changelogFile": "CHANGELOG.md"
+        "changelogFile": "CHANGELOG.md",
+        "preset": "conventionalcommits",
+        "presetConfig": {
+          "types": [
+            {"type": "feat", "section": "New features"},
+            {"type": "fix", "section": "Bug fixes"},
+            {"type": "perf", "section": "Improvements"},
+            {"type": "sec", "section": "Security"},
+            {"type": "revert", "section": "Reverts"},
+            {"type": "docs", "section": "Documentation", "hidden": true},
+            {"type": "style", "section": "Styles", "hidden": true},
+            {"type": "chore", "section": "Chores", "hidden": true},
+            {"type": "refactor", "section": "Code Refactoring", "hidden": true},
+            {"type": "test", "section": "Tests", "hidden": true},
+            {"type": "build", "section": "Build System", "hidden": true},
+            {"type": "ci", "section": "Continuous Integration", "hidden": true}
+          ]
+        }
       }
     ],
     [
