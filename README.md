@@ -42,12 +42,12 @@ Install the package using your preferred package manager:
 
 **NPM:**
 ```bash
-npm install @newrelic/video-theo
+npm install @newrelic/video-theo-js
 ```
 
 **Yarn:**
 ```bash
-yarn add @newrelic/video-theo
+yarn add @newrelic/video-theo-js
 ```
 
 ### Option 2: Direct Script Include (Without NPM)
@@ -123,7 +123,7 @@ Before using the tracker, ensure you have:
 ```javascript
 import * as THEOplayer from 'theoplayer';
 import 'theoplayer/ui.css';
-import { TheoTracker } from '@newrelic/video-theo/browser';
+import { TheoTracker } from '@newrelic/video-theo-js/browser';
 
 // Create a container element in your HTML:
 // <div id="player" class="theoplayer-container video-js theoplayer-skin"></div>
@@ -393,7 +393,7 @@ tracker.setOptions({
 ```javascript
 import * as THEOplayer from 'theoplayer';
 import 'theoplayer/ui.css';
-import { TheoTracker } from '@newrelic/video-theo/browser';
+import { TheoTracker } from '@newrelic/video-theo-js/browser';
 
 const element = document.getElementById('player');
 const player = new THEOplayer.Player(element, {

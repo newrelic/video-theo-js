@@ -1,6 +1,5 @@
 // THEO Player License Key
-const LICENSE = 'Your License Key';
-
+const LICENSE = '<YOUR_THEO_PLAYER_LICENSE_KEY>';
 
 
 // Sample video URLs for testing
@@ -176,13 +175,16 @@ function initPlayer() {
 
     // Start updating stats
     updateStats();
-    const NR_VIDEO_OPTIONS = {
-        info: {
-          beacon: '',
-          licenseKey: '',
-          applicationID: '',
-        },
-      };
+   const NR_VIDEO_OPTIONS = {
+  info: {
+    licenseKey: 'YOUR_LICENSE_KEY',
+    beacon: 'YOUR_BEACON_URL',
+    applicationID: 'YOUR_APPLICATION_ID',
+  },
+  config: {
+    qoeIntervalFactor: 1,
+  },
+};
     try {
         tracker = new TheoTracker(player, NR_VIDEO_OPTIONS);
     } catch (error) {
