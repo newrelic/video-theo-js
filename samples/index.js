@@ -1,5 +1,5 @@
 // THEO Player License Key
-const LICENSE = 'Your License Key';
+const LICENSE = 'sZP7IYe6T6P60S0oCS0r0Ok13DBkFSaZCle-Tu46CZz_3LCo3lI6TD3g3oh6FOPlUY3zWokgbgjNIOf9flbzCK0o0LAeFS410Qa-3Q4K3Ok10LeLFSekIlfcTux6IuXK0ZfVfK4_bQgZCYxNWoryIQXzImf90Sbr0ueL3Sfi0u5i0Oi6Io4pIYP1UQgqWgjeCYxgflEc3Lec3Let3Sfr3LhkFOPeWok1dDrLYtA1Ioh6TgV6v6fVfKxqWQPrFK3qWmfVfKcqCoXVdQjLUOfVfG3pID49sY3iCYPZWtbpCoj-f6i6UQ1gWZrVdYIgf6i6UQ1gWtAVCYggb6rlWoz6Ymi6IQj-CDgpbkjLWt4ZCoh6TgV6v6fVfKxqWQPrFK3qWmfVfKcqCoXVdQjLUOfVfG3pID49sY3iCYPZWtbpCoj-f6i6UQ1gWZrVdYIgf6i6UQ1gWtAVCYggb6rlWoz6Ymi6box7bZf9DZPEUQkV3mPUFOPLIDreYog-bwPgbt3NWo_6TGxZUDhVfKIgCYxkbK4LflNWYYz';
 
 
 
@@ -176,13 +176,16 @@ function initPlayer() {
 
     // Start updating stats
     updateStats();
-    const NR_VIDEO_OPTIONS = {
-        info: {
-          beacon: '',
-          licenseKey: '',
-          applicationID: '',
-        },
-      };
+   const NR_VIDEO_OPTIONS = {
+  info: {
+    licenseKey: 'NRBR-11e0d217b78ad09b11f',
+    beacon: 'bam.nr-data.net',
+    applicationID: '601643203',
+  },
+  config: {
+    qoeIntervalFactor: 1,
+  },
+};
     try {
         tracker = new TheoTracker(player, NR_VIDEO_OPTIONS);
     } catch (error) {
